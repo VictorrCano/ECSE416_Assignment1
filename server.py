@@ -27,7 +27,7 @@ server.bind(ADDR)
 
 
 def handle_client(connection, address):
-    print(f"[NEW CONNECTION] {address} connected.")
+    print(f"Connection: OK")
     connected = True
     while connected:
         # blocking line of code VVV so run handle_client in individual threads
@@ -39,6 +39,9 @@ def handle_client(connection, address):
             msg = connection.recv(msg_length).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+                break
+#            with open (filename, "rb") as file:
+ #               msg.
             print(f"[{address}] {msg}")
 
     connection.close()
