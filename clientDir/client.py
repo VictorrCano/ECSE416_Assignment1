@@ -44,16 +44,43 @@ ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
+print("Connection: OK")
 
 
-def send(msg):
+def sendDecoded(msg):
     message = msg.encode(FORMAT)
-    msg_length = len(message)
-    send_length = str(msg_length).encode(FORMAT)
-    send_length += b' ' * (HEADER - len(send_length))
-    client.send(send_length)
     client.send(message)
 
+if FILENAME != None:
+    sendDecoded(FILENAME)
+    print("Request message sent.")
 
-send("Hello!")
-#send(DISCONNECT_MESSAGE)
+    fileType = FILENAME.split(".")
+
+    if fileType[1] == "jpg":
+        filetypeString = "Content-Type: jpg/html"
+    else:
+        filetypeString = "Content-Type: text/html"
+
+    
+    filex_response = client.recv(4096).decode(FORMAT)
+    print("Server HTTP Response: " + filex_response)
+    
+
+    if filex_response == "HTTP 404 Not Found":
+        print("404 Not Found")
+        print("Socket closed")
+        client.close()
+    
+    else:
+        filex_data = client.recv(4096)
+
+        if filetypeString == "Content-Type: jpg/html":
+            print(filetypeString)
+            #add or print image
+        else:
+            print(filetypeString)
+            print(filex_data.decode(FORMAT))
+    
+    client.close()
+
