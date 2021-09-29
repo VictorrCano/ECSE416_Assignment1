@@ -1,5 +1,6 @@
 import socket
 import sys
+from datetime import datetime
 
 # Default settings VVV
 HEADER = 64
@@ -53,6 +54,7 @@ def sendDecoded(msg):
 
 if FILENAME != None:
     sendDecoded(FILENAME)
+
     print("Request message sent.")
 
     fileType = FILENAME.split(".")
@@ -62,7 +64,7 @@ if FILENAME != None:
     else:
         filetypeString = "Content-Type: text/html"
 
-    
+
     filex_response = client.recv(4096).decode(FORMAT)
     print("Server HTTP Response: " + filex_response)
     
@@ -73,14 +75,16 @@ if FILENAME != None:
         client.close()
     
     else:
-        filex_data = client.recv(4096)
+        filex_data = client.recv(400000)
 
         if filetypeString == "Content-Type: jpg/html":
             print(filetypeString)
-            #add or print image
+            with open(FILENAME, 'wb') as outF:
+                outF.write(filex_data)
         else:
             print(filetypeString)
             print(filex_data.decode(FORMAT))
-    
+            print("Socket closed")
+
     client.close()
 

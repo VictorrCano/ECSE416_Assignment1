@@ -4,7 +4,7 @@ import sys
 import os
 
 PORT = 5050
-# HEADER is first message sent by client warning server of size of incoming message
+# HEADER is 5050first message sent by client warning server of size of incoming message
 # header message fixed at 64 bytes
 # padding after number representing size of incoming message, padded up to 64
 HEADER = 64
@@ -40,14 +40,17 @@ while True:
             connection.send("HTTP 200 OK".encode(FORMAT))
         else:
             connection.send("HTTP 404 Not Found".encode(FORMAT))
-                
-        f = open(msg, "rb")
-        file_data = f.read()
 
-        try:
-            connection.send(file_data)
-        except:
-            connection.send("HTTP 500 Internal Server Error".encode(FORMAT))
+        #f = open(msg, "rb")
+        #file_data = f.read()
+
+        with open(msg, 'rb') as f:
+
+            file_data = f.read()
+            try:
+                connection.send(file_data)
+            except:
+                connection.send("HTTP 500 Internal Server Error".encode(FORMAT))
 
     connection.close()
 
