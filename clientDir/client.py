@@ -75,7 +75,8 @@ if FILENAME != None:
         client.close()
     
     else:
-        filex_data = client.recv(400000)
+        #header = client.recv(334491)
+        filex_data = client.recv(334491)
 
         if filetypeString == "Content-Type: jpg/html":
             print(filetypeString)

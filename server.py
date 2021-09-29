@@ -41,11 +41,9 @@ while True:
         else:
             connection.send("HTTP 404 Not Found".encode(FORMAT))
 
-        #f = open(msg, "rb")
-        #file_data = f.read()
+
 
         with open(msg, 'rb') as f:
-
             file_data = f.read()
             try:
                 connection.send(file_data)
