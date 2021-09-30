@@ -22,7 +22,7 @@ elif len(sys.argv) == 2:
 
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('0.0.0.0', int(PORT)))
+server.bind((socket.gethostname(), int(PORT)))
 server.listen(PORT)
 
 
@@ -41,14 +41,16 @@ while True:
         else:
             connection.send("HTTP 404 Not Found".encode(FORMAT))
 
+        if os.path.isfile(msg):
+            with open(msg, 'rb') as f:
 
-
-        with open(msg, 'rb') as f:
-            file_data = f.read()
-            try:
-                connection.send(file_data)
-            except:
-                connection.send("HTTP 500 Internal Server Error".encode(FORMAT))
+                file_data = f.read(1024)
+                while file_data:
+                    try:
+                        connection.send(file_data)
+                        file_data = f.read(1024)
+                    except:
+                        connection.send("HTTP 500 Internal Server Error".encode(FORMAT))
 
     connection.close()
 
