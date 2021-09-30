@@ -64,6 +64,7 @@ if FILENAME != None:
     else:
         filetypeString = "Content-Type: text/html"
 
+    client.settimeout(TIMEOUT)
 
     filex_response = client.recv(4096).decode(FORMAT)
     print("Server HTTP Response: " + filex_response)
@@ -75,13 +76,14 @@ if FILENAME != None:
         client.close()
     
     else:
-        #header = client.recv(334491)
-        filex_data = client.recv(334491)
+        filex_data = client.recv(1024)
 
         if filetypeString == "Content-Type: jpg/html":
             print(filetypeString)
             with open(FILENAME, 'wb') as outF:
-                outF.write(filex_data)
+                while filex_data:
+                    outF.write(filex_data)
+                    filex_data = client.recv(1024)
         else:
             print(filetypeString)
             print(filex_data.decode(FORMAT))
